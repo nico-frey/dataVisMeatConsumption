@@ -99,6 +99,54 @@ export default {
                     .style("cursor", "pointer")
                     .on("mousemove", (event) => {
                         const { pageX, pageY } = event;
+                        const tooltipWidth = tooltip.node().offsetWidth;
+                        const tooltipHeight = tooltip.node().offsetHeight;
+
+                        const containerRect = this.$refs.chartContainer.getBoundingClientRect();
+                        const containerLeft = containerRect.left;
+                        const containerTop = containerRect.top;
+                        const containerWidth = containerRect.width;
+                        const containerHeight = containerRect.height;
+
+                        let left = pageX - containerLeft + 20;
+                        let top = pageY - containerTop + 20;
+
+                        // Adjust for container boundaries
+                        if (left + tooltipWidth > containerWidth) {
+                            left = containerWidth - tooltipWidth - 10;
+                        }
+                        if (top + tooltipHeight > containerHeight) {
+                            top = containerHeight - tooltipHeight - 10;
+                        }
+                        if (left < 0) {
+                            left = 10;
+                        }
+                        if (top < 0) {
+                            top = 10;
+                        }
+
+                        const emissions = [
+                            { category: "Land Use", value: d.emissionsLandUse },
+                            { category: "Farming", value: d.emissionsFarming },
+                            { category: "Feed", value: d.emissionsFeed },
+                            { category: "Processing", value: d.emissionsProcessing },
+                            { category: "Transport", value: d.emissionsTransport },
+                            { category: "Retail", value: d.EmissionsRetail },
+                            { category: "Packaging", value: d.emissionsPackaging },
+                            { category: "Waste", value: d.emissionsWaste },
+                        ];
+
+                        const powerScale = d3.scalePow()
+                            .exponent(0.4)
+                            .domain([0, d3.max(emissions, (item) => item.value)])
+                            .range([0, 100]);
+
+                        const treemapHtml = emissions
+                            .map((item) => {
+                                const scaledWidth = powerScale(item.value);
+                                return `<div style="display: inline-block; width: ${scaledWidth}%; height: 2rem; background-color: ${this.getColor(item.category)};"></div>`;
+                            })
+                            .join("");
 
                         tooltip
                             .html(`
@@ -113,11 +161,12 @@ export default {
                                     <div class="tooltip-line"><p>Retail:</p><p>${d.EmissionsRetail}kg</p></div>
                                     <div class="tooltip-line"><p>Packaging:</p><p>${d.emissionsPackaging}kg</p></div>
                                     <div class="tooltip-line"><p>Waste:</p><p>${d.emissionsWaste}kg</p></div>
+                                    <div class="mini-treemap">${treemapHtml}</div>
                                 </div>
                                  
                             `)
-                            .style("top", `${pageY + 10}px`)
-                            .style("left", `${pageX + 10}px`)
+                            .style("top", `${top}px`)
+                            .style("left", `${left}px`)
                             .style("opacity", 1);
                     })
                     .on("mouseleave", () => {
@@ -147,14 +196,32 @@ export default {
             });
         },
 
-        //My own color palette according to FIgma
+        //My own color palette for big treemap according to Figma
         getColor(type) {
-            const customColors = ["#1C4028", "#2B532F", "#41643B", "#597848", "#718258"];
+            const parentColors = ["#1C4028", "#2B532F", "#41643B", "#597848", "#718258"];
+            const categoryColors = {
+                "Land Use": "#1C4028",
+                "Farming": "#2B532F",
+                "Feed": "#41643B",
+                "Processing": "#597848",
+                "Transport": "#718258",
+                "Retail": "#8B9D6E",
+                "Packaging": "#A8C19B",
+                "Waste": "#C3D5B8",
+            };
+
+            // Check if the type matches any existing acategory colors
+            if (categoryColors[type]) {
+                return categoryColors[type];
+            }
+
+            // Fallback to parentColors for types
             const types = this.processedData.map((d) => d.type);
-            const colorScale = d3.scaleOrdinal().domain(types).range(customColors);
+            const colorScale = d3.scaleOrdinal().domain(types).range(parentColors);
             return colorScale(type);
         },
-    },
+
+    }
 };
 </script>
 
@@ -219,6 +286,13 @@ export default {
 
 .tooltip-divider {
     border: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.mini-treemap {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .label-wrapper {
