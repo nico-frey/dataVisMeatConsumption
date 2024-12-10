@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import Home from "../views/Home.vue"
 import SwissEmission from "../views/SwissEmission.vue"
-import AnimalEmission from "../views/AnimalEmission.vue"
+import AnimalDetailsView from "../views/AnimalDetailsView.vue"
 
 const routes = [
   {
@@ -16,9 +16,9 @@ const routes = [
     props: true,
   },
   {
-    path: "/animal-emission",
-    name: "AnimalEmission",
-    component: AnimalEmission,
+    path: "/animal/:type",
+    name: "AnimalDetailsView",
+    component: () => import("../views/AnimalDetailsView.vue"),
     props: true,
   },
 ]

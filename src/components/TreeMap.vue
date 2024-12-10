@@ -178,6 +178,11 @@ export default {
                     })
                     .on("mouseleave", () => {
                         tooltip.style("opacity", 0);
+                    })
+                    .on("click", () => {
+                        this.$router.push({
+                            path: `/animal/${d.type.toLowerCase()}`, // Pass only the type
+                        });
                     });
 
                 container
