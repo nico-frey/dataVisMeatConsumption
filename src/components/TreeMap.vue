@@ -76,12 +76,19 @@ export default {
                 .style("height", `${containerHeight}px`)
                 .style("position", "relative");
 
+            const tooltip = d3
+                .select(this.$refs.chartContainer)
+                .append("div")
+                .attr("class", "tooltip")
+                .style("position", "absolute")
+                .style("opacity", 0);
+
             let xOffset = 0;
             data.forEach((d, i) => {
                 const sliceWidth = scaledWidths[i];
                 const color = this.getColor(d.type);
 
-                container
+                const tile = container
                     .append("div")
                     .style("position", "absolute")
                     .style("top", "0")
@@ -89,15 +96,33 @@ export default {
                     .style("width", `${sliceWidth}px`)
                     .style("height", `${height}px`)
                     .style("background-color", color)
-                    .style("display", "flex")
-                    .style("justify-content", "left")
-                    .style("align-items", "top")
-                    .style("padding", "1.5rem")
-                    .style("box-sizing", "border-box")
-                    .style("color", "white")
-                    .html(`<div style="text-align: center;">
-                        <img src="${d.svg}" alt="${d.type}" style="width: 24px; height: 24px;" />
-                    </div>`);
+                    .style("cursor", "pointer")
+                    .on("mousemove", (event) => {
+                        const { pageX, pageY } = event;
+
+                        tooltip
+                            .html(`
+                                <div class="tooltip-header"><p>${d.type}</p><p>${d.TotalEmissionsPerCapita.toFixed(2)} CO2/year</p></div>
+                                <div class="tooltip-divider"></div>
+                                <div class="tooltip-line-wrapper">
+                                    <div class="tooltip-line"><p>Land Use:</p> <p>${d.emissionsLandUse}kg</p></div>
+                                    <div class="tooltip-line"><p>Farming:</p> <p>${d.emissionsFarming}kg</p></div>
+                                    <div class="tooltip-line"><p>Feed:</p> <p>${d.emissionsFeed}kg</p></div>
+                                    <div class="tooltip-line"><p>Processing:</p><p>${d.emissionsProcessing}kg</p></div>
+                                    <div class="tooltip-line"><p>Transport:</p><p>${d.emissionsTransport}kg</p></div>
+                                    <div class="tooltip-line"><p>Retail:</p><p>${d.EmissionsRetail}kg</p></div>
+                                    <div class="tooltip-line"><p>Packaging:</p><p>${d.emissionsPackaging}kg</p></div>
+                                    <div class="tooltip-line"><p>Waste:</p><p>${d.emissionsWaste}kg</p></div>
+                                </div>
+                                 
+                            `)
+                            .style("top", `${pageY + 10}px`)
+                            .style("left", `${pageX + 10}px`)
+                            .style("opacity", 1);
+                    })
+                    .on("mouseleave", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 container
                     .append("div")
@@ -137,6 +162,62 @@ export default {
 .chart-container {
     display: block;
     overflow: hidden;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 10;
+    background: #1D2222;
+    color: #fff;
+    padding: 1rem;
+    pointer-events: none;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: opacity 0.2s ease-in-out;
+    width: 18rem;
+}
+
+.tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+}
+
+.tooltip-header>p:nth-child(1) {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.tooltip-header>p:nth-child(2) {
+    font-size: 1.2rem;
+    color: #94B268;
+    margin: 0;
+}
+
+.tooltip-line-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tooltip-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+
+}
+
+.tooltip-line>p {
+    color: #8E9090;
+    margin: 0;
+}
+
+.tooltip-divider {
+    border: 1px dashed rgba(255, 255, 255, 0.12);
 }
 
 .label-wrapper {
