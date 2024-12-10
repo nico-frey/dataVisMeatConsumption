@@ -27,26 +27,23 @@ export default {
                 const response = await fetch("/data.json");
                 const json = await response.json();
 
-                // Transform raw data into format suitable for the chart
-                this.rawData = json.map((item) => ({
-                    name: item.type,
-                    value: item.TotalEmissionsPerCapita,
-                    color: this.getColor(item.type),
-                }))
+                this.rawData = json
+                    .map((item) => ({
+                        name: item.type,
+                        value: item.TotalEmissionsPerCapita,
+                    }))
                     .sort((a, b) => b.value - a.value);
+
+                const minValue = d3.min(this.rawData, (d) => d.value);
+                const maxValue = d3.max(this.rawData, (d) => d.value);
+
+                this.colorScale = d3
+                    .scaleSequential()
+                    .domain([minValue, maxValue])
+                    .interpolator(d3.interpolateBlues);
             } catch (error) {
                 console.error("Failed to fetch data:", error);
             }
-        },
-        getColor(type) {
-            const colors = {
-                Beef: "#1C4028",
-                Fish: "#2B532F",
-                Lamb: "#41643B",
-                Pork: "#597848",
-                Poultry: "#718258",
-            };
-            return colors[type] || "#8A8D85";
         },
         createChart() {
             this.updateChart();
@@ -55,7 +52,6 @@ export default {
             if (!this.$refs.chartContainer || !this.rawData.length) return;
 
             const data = this.rawData;
-
             const containerWidth = this.$refs.chartContainer.parentElement.offsetWidth;
             const height = 500;
 
@@ -74,6 +70,7 @@ export default {
             let xOffset = 0;
             data.forEach((d) => {
                 const sliceWidth = (d.value / totalEmissions) * containerWidth;
+                const color = this.colorScale(d.value);
                 container
                     .append("div")
                     .style("position", "absolute")
@@ -81,7 +78,7 @@ export default {
                     .style("left", `${xOffset}px`)
                     .style("width", `${sliceWidth}px`)
                     .style("height", `${height}px`)
-                    .style("background-color", d.color)
+                    .style("background-color", color)
                     .style("display", "flex")
                     .style("justify-content", "left")
                     .style("align-items", "top")
