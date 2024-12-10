@@ -40,7 +40,7 @@ export default {
             const container = d3
                 .select(this.$refs.chartContainer)
                 .style("width", `${containerWidth}px`)
-                .style("height", `${height + 50}px`) // Add extra height for labels
+                .style("height", `${height + 100}px`) // Add extra height for labels
                 .style("position", "relative");
 
             let xOffset = 0;
@@ -67,21 +67,22 @@ export default {
             </div>`);
                 container
                     .append("div")
+                    .attr("class", "chart-label")
                     .style("position", "absolute")
-                    .style("background-color", "red")
+                    .style("border-left-style", "dotted")
+                    .style("border-width", "0.1rem")
+                    .style("border-color", "#848586")
+                    .style("box-sizing", "border-box")
                     .style("top", `${height}px`)
                     .style("left", `${xOffset}px`)
                     .style("width", `${sliceWidth}px`)
-                    .style("height", "50px")
+                    .style("height", "100px")
                     .style("display", "flex")
+                    .style("padding-left", "0.75rem")
                     .style("flex-direction", "column")
-                    .style("justify-content", "flex-start")
-                    .style("align-items", "center")
-                    .style("color", "white")
-                    .style("font-family", "sans-serif")
-                    .style("font-size", "12px")
-                    .style("text-align", "center")
-                    .html(`<div>${d.name}</div><div>${d.value}kg</div>`);
+                    .style("justify-content", "flex-end")
+                    .style("align-items", "flex-start")
+                    .html(`<div class="label-wrapper"><div class="label-name">${d.name}</div><div class="label-value">${d.value}kg</div></div>`);
 
                 xOffset += sliceWidth;
             });
@@ -94,5 +95,22 @@ export default {
 .chart-container {
     display: block;
     overflow: hidden;
+}
+
+.label-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    color: #FFF;
+    font-family: "Fragment Mono";
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.label-value {
+    color: rgba(255, 255, 255, 0.50);
 }
 </style>

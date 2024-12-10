@@ -1,0 +1,5 @@
+﻿type,emissionsLandUse,emissionsFarming,emissionsFeed,emissionsProcessing,emissionsTransport,EmissionsRetail,emissionsPackaging,emissionsWaste,totalEmissionsPerKg,consumptionPerYearKg,killedPerYear,TotalEmissionsPerCapita
+Beef,23.24,56.23,2.68,1.81,0.49,0.23,0.35,14.44,99.48,19.76,598691,1965.67
+Fish,1.19,8.06,1.83,0.04,0.25,0.09,0.14,2.03,13.63,15.93,1780000,217.16
+Lamb,0.65,27.03,3.28,1.54,0.68,0.30,0.35,5.90,39.72,1.33,278475,52.83
+Pork,2.24,2.48,4.30,0.42,0.50,0.28,0.43,1.66,12.31,28.23,2544399,347.39
