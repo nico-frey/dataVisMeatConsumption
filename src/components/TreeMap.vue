@@ -214,6 +214,7 @@ export default {
 .tooltip-line>p {
     color: #8E9090;
     margin: 0;
+    font-size: 0.8rem;
 }
 
 .tooltip-divider {
