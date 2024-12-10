@@ -12,7 +12,8 @@
     "totalEmissionsPerKg": 99.48,
     "consumptionPerYearKg": 19.76,
     "killedPerYear": 598691,
-    "TotalEmissionsPerCapita": 1965.67
+    "TotalEmissionsPerCapita": 1965.67,
+    "svg": "cow.svg"
   },
   {
     "type": "Fish",
@@ -27,7 +28,8 @@
     "totalEmissionsPerKg": 13.63,
     "consumptionPerYearKg": 15.93,
     "killedPerYear": 1780000,
-    "TotalEmissionsPerCapita": 217.16
+    "TotalEmissionsPerCapita": 217.16,
+    "svg": "fish.svg"
   },
   {
     "type": "Lamb",
@@ -42,7 +44,8 @@
     "totalEmissionsPerKg": 39.72,
     "consumptionPerYearKg": 1.33,
     "killedPerYear": 278475,
-    "TotalEmissionsPerCapita": 52.83
+    "TotalEmissionsPerCapita": 52.83,
+    "svg": "lamb.svg"
   },
   {
     "type": "Pork",
@@ -57,7 +60,8 @@
     "totalEmissionsPerKg": 12.31,
     "consumptionPerYearKg": 28.23,
     "killedPerYear": 2544399,
-    "TotalEmissionsPerCapita": 347.39
+    "TotalEmissionsPerCapita": 347.39,
+    "svg": "pig.svg"
   },
   {
     "type": "Poultry",
@@ -72,6 +76,7 @@
     "totalEmissionsPerKg": 9.87,
     "consumptionPerYearKg": 17.61,
     "killedPerYear": 83071000,
-    "TotalEmissionsPerCapita": 174.04
+    "TotalEmissionsPerCapita": 174.04,
+    "svg": "chicken.svg"
   }
 ]

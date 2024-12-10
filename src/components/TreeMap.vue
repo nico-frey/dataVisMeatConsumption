@@ -4,6 +4,7 @@
 
 <script>
 import * as d3 from "d3";
+import { svg } from "d3";
 
 export default {
     name: "TreeMap",
@@ -31,6 +32,7 @@ export default {
                     .map((item) => ({
                         name: item.type,
                         value: item.TotalEmissionsPerCapita,
+                        svg: new URL(`../assets/${item.svg}`, import.meta.url).href,
                     }))
                     .sort((a, b) => b.value - a.value);
 
@@ -88,7 +90,7 @@ export default {
                     .style("font-family", "sans-serif")
                     .style("font-size", "14px")
                     .html(`<div style="text-align: center;">
-              <img src="src/assets/paw-print.svg" alt="${d.name}" style="width: 24px; height: 24px;" />
+             <img src="${d.svg}" alt="${d.name}" style="width: 24px; height: 24px;" />
             </div>`);
                 container
                     .append("div")
