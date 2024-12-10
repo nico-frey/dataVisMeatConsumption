@@ -24,6 +24,8 @@ export default {
 .close-button {
     width: 1.5rem;
     height: 1.5rem;
+    min-width: 1.5rem;
+    max-height: 1.5rem;
     border-radius: 999rem;
     background: rgba(255, 255, 255, 0.10);
     display: flex;

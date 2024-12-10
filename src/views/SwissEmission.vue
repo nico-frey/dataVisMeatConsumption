@@ -1,9 +1,8 @@
-<!-- src/views/SwissEmission.vue -->
 <template>
     <div class="chart-wrapper">
         <div class="chart-header">
             <h1>How much CO2 does the average Swiss meat eater emit?</h1>
-            <CloseButton @onClick="closeRoute" />
+            <CloseButton @Click="closeRoute" />
         </div>
         <TreeMap :data="data" />
     </div>
@@ -46,5 +45,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    text-align: left;
+    gap: 2rem;
 }
 </style>

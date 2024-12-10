@@ -48,7 +48,7 @@ export default {
             const data = this.processedData;
             const containerWidth = this.$refs.chartContainer.parentElement.offsetWidth || 500; // Default width
             const containerHeight = this.$refs.chartContainer.parentElement.offsetHeight || 400; // Default height
-            const height = containerHeight - 200;
+            const height = containerHeight - 210;
 
             // Define power scale for nicer width distribution
             const minTileWidth = 100;
