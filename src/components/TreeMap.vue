@@ -6,14 +6,14 @@
 import * as d3 from "d3";
 
 export default {
-    name: "CO2Chart",
-    props: {
-        data: {
-            type: Array,
-            required: true,
-        },
+    name: "TreeMap",
+    data() {
+        return {
+            rawData: [],
+        };
     },
-    mounted() {
+    async mounted() {
+        await this.fetchData();
         this.createChart();
 
         window.addEventListener("resize", this.updateChart);
@@ -22,13 +22,39 @@ export default {
         window.removeEventListener("resize", this.updateChart);
     },
     methods: {
+        async fetchData() {
+            try {
+                const response = await fetch("/data.json");
+                const json = await response.json();
+
+                // Transform raw data into format suitable for the chart
+                this.rawData = json.map((item) => ({
+                    name: item.type,
+                    value: item.TotalEmissionsPerCapita,
+                    color: this.getColor(item.type),
+                }))
+                    .sort((a, b) => b.value - a.value);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            }
+        },
+        getColor(type) {
+            const colors = {
+                Beef: "#1C4028",
+                Fish: "#2B532F",
+                Lamb: "#41643B",
+                Pork: "#597848",
+                Poultry: "#718258",
+            };
+            return colors[type] || "#8A8D85";
+        },
         createChart() {
             this.updateChart();
         },
         updateChart() {
-            if (!this.$refs.chartContainer) return;
+            if (!this.$refs.chartContainer || !this.rawData.length) return;
 
-            const data = this.data;
+            const data = this.rawData;
 
             const containerWidth = this.$refs.chartContainer.parentElement.offsetWidth;
             const height = 500;
@@ -40,7 +66,9 @@ export default {
             const container = d3
                 .select(this.$refs.chartContainer)
                 .style("width", `${containerWidth}px`)
-                .style("height", `${height + 100}px`) // Add extra height for labels
+
+                // height but with extra height so there's space for the labels
+                .style("height", `${height + 100}px`)
                 .style("position", "relative");
 
             let xOffset = 0;
@@ -63,7 +91,7 @@ export default {
                     .style("font-family", "sans-serif")
                     .style("font-size", "14px")
                     .html(`<div style="text-align: center;">
-              <img src="${d.icon}" alt="${d.name}" style="width: 24px; height: 24px;" />
+              <img src="src/assets/paw-print.svg" alt="${d.name}" style="width: 24px; height: 24px;" />
             </div>`);
                 container
                     .append("div")
@@ -82,7 +110,7 @@ export default {
                     .style("flex-direction", "column")
                     .style("justify-content", "flex-end")
                     .style("align-items", "flex-start")
-                    .html(`<div class="label-wrapper"><div class="label-name">${d.name}</div><div class="label-value">${d.value}kg</div></div>`);
+                    .html(`<div class="label-wrapper"><div class="label-name">${d.name}</div><div class="label-value">${d.value.toFixed(2)}kg</div></div>`);
 
                 xOffset += sliceWidth;
             });
