@@ -1,11 +1,7 @@
 <script>
-import TreeMap from "./components/TreeMap.vue";
 
 export default {
   name: "App",
-  components: {
-    TreeMap,
-  },
   data() {
     return {
       rawData: [],
@@ -33,7 +29,29 @@ export default {
 </script>
 
 <template>
-  <router-view :data="filteredData" />
+  <router-view :data="filteredData" v-slot="{ Component }">
+    <transition name="route" mode="out-in">
+      <component :is="Component" :data="filteredData"></component>
+    </transition>
+  </router-view>
 </template>
 
-<style scoped></style>
+<style scoped>
+.route-enter-from {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.route-enter-active {
+  transition: all 0.3 ease-out;
+}
+
+.route-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+.route-leave-active {
+  transition: all 0.3 ease-in;
+}
+</style>

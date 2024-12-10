@@ -20,9 +20,9 @@
                 </svg>
             </div>
             <div class="box-content">
-                <span class="highlight-brown">82kg</span> <span class="subtext">of meat</span>
+                <span class="highlight-brown">82kg</span> <span class="subtext">of meat a year</span>
             </div>
-            <div class="mock-treemap brown-treemap"></div>
+            <!-- <div class="mock-treemap brown-treemap"></div> -->
         </div>
 
         <div class="box" @click="navigateToSwissEmission">
@@ -36,7 +36,7 @@
             <div class="box-content">
                 <span class="highlight-green">2’757kg</span> <span class="subtext">CO2</span>
             </div>
-            <div class="mock-treemap green-treemap"></div>
+            <!--  <div class="mock-treemap green-treemap"></div> -->
         </div>
     </div>
 </template>
@@ -68,6 +68,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .box:hover {
