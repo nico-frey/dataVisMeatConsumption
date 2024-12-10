@@ -2,7 +2,7 @@
     <CloseButton @click="closeRoute" />
 
     <h2>The average Swiss person consumes...</h2>
-    <h1>{{ data.consumption }}kg of {{ data.type }}</h1>
+    <h1>{{ data.consumptionPerYearKg }}kg of {{ data.type }}</h1>
 
 </template>
 <script>
