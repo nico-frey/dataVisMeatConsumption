@@ -27,8 +27,10 @@ body {
 
 #app {
   max-width: 88.5rem;
+  box-sizing: border-box;
   width: 100%;
-  padding: 3rem;
+  height: 100vh;
+  padding: 3rem 3rem 3rem 3rem;
   text-align: center;
 }
 

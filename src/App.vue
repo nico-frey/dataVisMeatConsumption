@@ -1,22 +1,33 @@
 <script>
 import TreeMap from "./components/TreeMap.vue";
-import CloseButton from "./components/CloseButton.vue"
 
 export default {
   name: "App",
   components: {
-    TreeMap, CloseButton,
+    TreeMap,
   },
   data() {
     return {
-      co2Data: [
-        { name: "Beef", value: 1966, color: "#003300", icon: "src/assets/paw-print.svg" },
-        { name: "Pork", value: 347, color: "#004d00", icon: "src/assets/paw-print.svg" },
-        { name: "Fish", value: 217, color: "#006600", icon: "src/assets/paw-print.svg" },
-        { name: "Chicken", value: 174, color: "#008000", icon: "src/assets/paw-print.svg" },
-        { name: "Lamb", value: 53, color: "#009900", icon: "src/assets/paw-print.svg" },
-      ],
+      rawData: [], // Original raw data
     };
+  },
+  computed: {
+    filteredData() {
+      return Array.isArray(this.rawData) ? this.rawData : [];
+    },
+  },
+  async created() {
+    try {
+      const response = await fetch("/data.json");
+      const json = await response.json();
+      if (Array.isArray(json)) {
+        this.rawData = json;
+      } else {
+        console.error("Data fetched is not an array:", json);
+      }
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
   },
 };
 </script>
@@ -27,7 +38,7 @@ export default {
       <h1>How much CO2 does the average swiss meat eater emmit?</h1>
       <CloseButton @onClick="" />
     </div>
-    <TreeMap :data="co2Data" />
+    <TreeMap :data="filteredData" />
   </div>
 </template>
 
@@ -36,6 +47,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+  height: 100%;
 }
 
 .chart-header {
