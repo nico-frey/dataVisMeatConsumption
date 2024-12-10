@@ -1,0 +1,36 @@
+:root {
+  font-family: "Fragment Mono", monospace;
+  text-align: left;
+
+  color-scheme: light dark;
+  color: rgb(255, 255, 255);
+  background-color: #090c0d;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  justify-content: center;
+}
+
+#app {
+  max-width: 88.5rem;
+  width: 100%;
+  padding: 3rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+}
