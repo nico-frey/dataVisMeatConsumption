@@ -97,6 +97,13 @@ export default {
                     .style("height", `${height}px`)
                     .style("background-color", color)
                     .style("cursor", "pointer")
+                    .style("box-sizing", "border-box")
+                    .style("padding", "1.5rem")
+                    .style("display", "flex")
+                    .html(`
+                <img src="${d.svg}" alt="${d.type}" style="width: 2rem; height: 2rem; margin-bottom: 10px;" />
+                
+            `)
                     .on("mousemove", (event) => {
                         const { pageX, pageY } = event;
                         const tooltipWidth = tooltip.node().offsetWidth;
@@ -234,7 +241,7 @@ export default {
 .tooltip {
     position: absolute;
     z-index: 10;
-    background: #1D2222;
+    background: #121515;
     color: #fff;
     padding: 1rem;
     pointer-events: none;
