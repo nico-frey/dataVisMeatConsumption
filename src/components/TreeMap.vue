@@ -39,10 +39,10 @@ export default {
                 const minValue = d3.min(this.rawData, (d) => d.value);
                 const maxValue = d3.max(this.rawData, (d) => d.value);
 
-                this.colorScale = d3
-                    .scaleSequential()
-                    .domain([minValue, maxValue])
-                    .interpolator(d3.interpolateBlues);
+                const customColors = ["#1C4028", "#2B532F", "#41643B", "#597848", "#718258"];
+                this.colorScale = d3.scaleOrdinal()
+                    .domain(this.rawData.map((d) => d.name))
+                    .range(customColors);
             } catch (error) {
                 console.error("Failed to fetch data:", error);
             }
@@ -90,7 +90,7 @@ export default {
                     .style("font-family", "sans-serif")
                     .style("font-size", "14px")
                     .html(`<div style="text-align: center;">
-             <img src="${d.svg}" alt="${d.name}" style="width: 24px; height: 24px;" />
+                    <img src="${d.svg}" alt="${d.name}" style="width: 24px; height: 24px;" />
             </div>`);
                 container
                     .append("div")
