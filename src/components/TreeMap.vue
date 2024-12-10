@@ -13,53 +13,44 @@ export default {
             required: true,
         },
     },
-    watch: {
-        data: {
-            handler(newData) {
-                if (Array.isArray(newData)) {
-                    this.rawData = this.prepareData(newData);
-                    this.updateChart();
-                } else {
-                    console.warn("Received invalid data format in TreeMap component.");
-                }
-            },
-            immediate: true,
-        },
-    },
-    data() {
-        return {
-            rawData: [], // Processed data for the chart
-        };
-    },
     mounted() {
-        window.addEventListener("resize", this.updateChart);
+        this.$nextTick(() => {
+            setTimeout(() => {
+                this.processData();
+                this.createChart();
+                window.addEventListener("resize", this.updateChart);
+            }, 50);
+        });
     },
     beforeUnmount() {
         window.removeEventListener("resize", this.updateChart);
     },
+    data() {
+        return {
+            processedData: [],
+        };
+    },
     methods: {
-        prepareData(data) {
-            if (!Array.isArray(data)) {
-                console.warn("Invalid data format. Expected an array.");
-                return [];
-            }
-
-            return data
+        processData() {
+            this.processedData = this.data
                 .map((item) => ({
                     ...item,
-                    svg: new URL(`../assets/${item.svg}`, import.meta.url).href, // Add svg dynamically
+                    svg: new URL(`../assets/${item.svg}`, import.meta.url).href, // Add SVG dynamically
                 }))
                 .sort((a, b) => b.TotalEmissionsPerCapita - a.TotalEmissionsPerCapita); // Sort descending
         },
+        createChart() {
+            this.updateChart();
+        },
         updateChart() {
-            if (!this.$refs.chartContainer || !this.rawData.length) return;
+            if (!this.$refs.chartContainer || !this.processedData.length) return;
 
-            const data = this.rawData;
-            const containerWidth = this.$refs.chartContainer.parentElement.offsetWidth;
-            const containerHeight = this.$refs.chartContainer.parentElement.offsetHeight;
-            const height = containerHeight - 200; // Leave space for labels
+            const data = this.processedData;
+            const containerWidth = this.$refs.chartContainer.parentElement.offsetWidth || 500; // Default width
+            const containerHeight = this.$refs.chartContainer.parentElement.offsetHeight || 400; // Default height
+            const height = containerHeight - 200;
 
-            // Define power scale for width distribution
+            // Define power scale for nicer width distribution
             const minTileWidth = 100;
             const maxTileWidth = containerWidth * 0.35;
             const powerScale = d3.scalePow()
@@ -70,7 +61,6 @@ export default {
                 ])
                 .range([minTileWidth, maxTileWidth]);
 
-            // Calculate scaled widths
             let scaledWidths = data.map((d) =>
                 Math.max(powerScale(d.TotalEmissionsPerCapita), minTileWidth)
             );
@@ -78,17 +68,14 @@ export default {
             const scaleFactor = containerWidth / totalScaledWidth;
             scaledWidths = scaledWidths.map((w) => w * scaleFactor);
 
-            // Clear the container
             d3.select(this.$refs.chartContainer).html("");
 
-            // Define the chart container styles
             const container = d3
                 .select(this.$refs.chartContainer)
                 .style("width", `${containerWidth}px`)
                 .style("height", `${containerHeight}px`)
                 .style("position", "relative");
 
-            // Render tiles
             let xOffset = 0;
             data.forEach((d, i) => {
                 const sliceWidth = scaledWidths[i];
@@ -134,9 +121,11 @@ export default {
                 xOffset += sliceWidth;
             });
         },
+
+        //My own color palette according to FIgma
         getColor(type) {
             const customColors = ["#1C4028", "#2B532F", "#41643B", "#597848", "#718258"];
-            const types = this.rawData.map((d) => d.type);
+            const types = this.processedData.map((d) => d.type);
             const colorScale = d3.scaleOrdinal().domain(types).range(customColors);
             return colorScale(type);
         },
