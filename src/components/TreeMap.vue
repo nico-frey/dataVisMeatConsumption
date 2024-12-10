@@ -59,6 +59,21 @@ export default {
 
             const totalEmissions = data.reduce((sum, d) => sum + d.value, 0);
 
+            // Scaling the chart so everything fits neately
+            const minTileWidth = 100;
+            const maxTileWidth = containerWidth * 0.5;
+            const powerScale = d3.scalePow()
+                .exponent(0.9)
+                .domain([d3.min(data, (d) => d.value), d3.max(data, (d) => d.value)])
+                .range([minTileWidth, maxTileWidth]);
+
+            let scaledWidths = data.map((d) => Math.max(powerScale(d.value), minTileWidth));
+
+            const totalScaledWidth = scaledWidths.reduce((sum, w) => sum + w, 0);
+
+            const scaleFactor = containerWidth / totalScaledWidth;
+            scaledWidths = scaledWidths.map((w) => w * scaleFactor);
+
             d3.select(this.$refs.chartContainer).html("");
 
             const container = d3
@@ -70,9 +85,12 @@ export default {
                 .style("position", "relative");
 
             let xOffset = 0;
-            data.forEach((d) => {
-                const sliceWidth = (d.value / totalEmissions) * containerWidth;
+            data.forEach((d, i) => {
+                const sliceWidth = scaledWidths[i];
                 const color = this.colorScale(d.value);
+
+                console.log("Value:", d.value, "Scaled Width:", powerScale(d.value));
+
                 container
                     .append("div")
                     .style("position", "absolute")
