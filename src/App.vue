@@ -33,27 +33,7 @@ export default {
 </script>
 
 <template>
-  <div class="chart-wrapper">
-    <div class="chart-header">
-      <h1>How much CO2 does the average swiss meat eater emmit?</h1>
-      <CloseButton @onClick="" />
-    </div>
-    <TreeMap :data="filteredData" />
-  </div>
+  <router-view :data="filteredData" />
 </template>
 
-<style scoped>
-.chart-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  height: 100%;
-}
-
-.chart-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-</style>
+<style scoped></style>
